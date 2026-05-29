@@ -1,0 +1,30 @@
+function exportData() {
+  if (!data.length) {
+    toast('No data to export', true);
+    return;
+  }
+
+  const excelData = data.map(tx => ({
+    Name: tx.n,
+    Amount: tx.a,
+    Type: tx.t,
+    Category: tx.category,
+    Date: tx.date
+  }));
+
+  const worksheet = XLSX.utils.json_to_sheet(excelData);
+  const workbook = XLSX.utils.book_new();
+
+  XLSX.utils.book_append_sheet(
+    workbook,
+    worksheet,
+    "Transactions"
+  );
+
+  XLSX.writeFile(
+    workbook,
+    `Monetrax-${new Date().toISOString().split('T')[0]}.xlsx`
+  );
+
+  toast('Excel file exported');
+}
